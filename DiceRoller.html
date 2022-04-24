@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monopoly Score Keeper</title>
+    <style>
+
+.container {
+  height: 50px;
+  position: relative;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        button {
+          background-color: #4CAF50; /* Green */
+          border-radius: 12px;
+        border: 1px;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 5px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: rgb(238, 238, 238);
+        }
+    </style>
+
+    <script>
+        var Properties = [
+            {Name: "Texas Stadium", Cost: 600000, Mortgage: 300000, Color: "Purple"},
+            {Name: "Jacobs Field", Cost: 600000, Mortgage: 300000, Color: "Purple"},
+            {Name: "Grand Ole Opry", Cost: 1000000, Mortgage: 500000, Color: "LightBlue"},
+            {Name: "Gateway Arch", Cost: 1000000, Mortgage: 500000, Color: "LightBlue"},
+            {Name: "Mall of America", Cost: 1200000, Mortgage: 600000, Color: "LightBlue"},
+            {Name: "Centennial Olympic Park", Cost: 1400000, Mortgage: 700000, Color: "Pink"},
+            {Name: "Red Rocks Amphitheatre", Cost: 1400000, Mortgage: 700000, Color: "Pink"},
+            {Name: "Liberty Bell", Cost: 1600000, Mortgage: 800000, Color: "Pink"},
+            {Name: "South Beach", Cost: 1800000, Mortgage: 900000, Color: "Orange"},
+            {Name: "Johnson Space Center", Cost: 1800000, Mortgage: 900000, Color: "Orange"},
+            {Name: "Pioneer Square", Cost: 2000000, Mortgage: 1000000, Color: "Orange"},
+            {Name: "Camelback Mtn.", Cost: 2200000, Mortgage: 1100000, Color: "Red"},
+            {Name: "Wakiki Beach", Cost: 2200000, Mortgage: 1100000, Color: "Red"},
+            {Name: "Disney World", Cost: 2400000, Mortgage: 1200000, Color: "Red"},
+            {Name: "French Quarters", Cost: 2600000, Mortgage: 1300000, Color: "Yellow"},
+            {Name: "Hollywood", Cost: 2600000, Mortgage: 1300000, Color: "Yellow"},
+            {Name: "Golden Gate Bridge", Cost: 2800000, Mortgage: 1400000, Color: "Yellow"},
+            {Name: "Las Vegas Blvd.", Cost: 3000000, Mortgage: 1500000, Color: "Green"},
+            {Name: "Wrigley Field", Cost: 3000000, Mortgage: 1500000, Color: "Green"},
+            {Name: "White House", Cost: 3200000, Mortgage: 1600000, Color: "Green"},
+            {Name: "Fenway Park", Cost: 3500000, Mortgage: 1750000, Color: "Blue"},
+            {Name: "Time Square", Cost: 4000000, Mortgage: 2000000, Color: "Blue"},
+            {Name: "ORD", Cost: 2000000, Mortgage: 1000000, Color: "Airport"},
+            {Name: "LAX", Cost: 2000000, Mortgage: 1000000, Color: "Airport"},
+            {Name: "JFK", Cost: 2000000, Mortgage: 1000000, Color: "Airport"},
+            {Name: "ATL", Cost: 2000000, Mortgage: 1000000, Color: "Airport"},
+            {Name: "Cellphone Provider", Cost: 1500000, Mortgage: 750000, Color: "ServiceProvider"},
+            {Name: "Internet Provider", Cost: 1500000, Mortgage: 750000, Color: "ServiceProvider"},
+        ];
+        
+        Player1Balance = 5000000;
+        Player2Balance = 5000000;
+        BoardBalance = 0;
+
+        function InitializeStartRow(playerNum, balance){
+            document.getElementById("player"+playerNum+"Ledger").innerHTML =
+            document.getElementById("player"+playerNum+"Ledger").innerHTML + 
+            "<tr><td></td><td></td><td>"+balance+"</td></tr>";
+            
+        }
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
+        }
+
+        function PayFine(playerNum){
+            var fine =  GetAmount(playerNum);
+            BoardBalance +=  fine;
+            BoardBalance = Math.floor(BoardBalance);
+            CreditOrDebitWithAmount(playerNum, false, fine);
+        }
+
+        function PayTax(playerNum, PlayerXBalance){
+            BoardBalance +=  PlayerXBalance/10;
+            BoardBalance = Math.floor(BoardBalance);
+            CreditOrDebitWithAmount(playerNum, false, PlayerXBalance/10);
+        }
+
+        function CollectTax(playerNum){
+            var currentTax =BoardBalance;
+            BoardBalance =  0;
+            CreditOrDebitWithAmount(playerNum, true, currentTax);
+        }
+
+        function GetAmount(){
+            return parseInt(document.getElementById("amount").value);
+        }
+
+        function CreditOrDebit(playerNum, isCredit) {
+            var amount = GetAmount();
+            CreditOrDebitWithAmount(playerNum, isCredit, amount);
+        }
+
+        function CreditOrDebitWithAmount(playerNum, isCredit, amount) {
+            document.getElementById("BoardBalance").innerHTML = "Board Balance: " + BoardBalance;
+
+            if(playerNum == 1){
+                if(isCredit){
+                    Player1Balance += amount;
+                    Player1Balance = Math.floor(Player1Balance);
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
+                    "<tr><td>"+amount+ "</td><td></td><td>"+Player1Balance+"</td></tr>";
+                } else {
+                    Player1Balance -= amount;
+                    Player1Balance = Math.floor(Player1Balance);
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
+                    "<tr><td></td><td>"+amount+ "</td><td>"+Player1Balance+"</td></tr>";
+                }
+                
+            } else {
+                if(isCredit){
+                    Player2Balance += amount;
+                    Player2Balance = Math.floor(Player2Balance);
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
+                    "<tr><td>"+amount+ "</td><td></td><td>"+Player2Balance+"</td></tr>";
+                } else {
+                    Player2Balance -= amount;
+                    Player2Balance = Math.floor(Player2Balance);
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
+                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
+                    "<tr><td></td><td>"+amount+ "</td><td>"+Player2Balance+"</td></tr>";
+                }
+            }
+
+            document.getElementById("Player1Balance").innerHTML = "Player 1:  " + Player1Balance;
+            document.getElementById("Player2Balance").innerHTML = "Player 2:  " + Player2Balance;
+            
+        }
+        
+        function RollDice() {
+            var dice1 = getRndInteger(1, 7);
+            var dice2 = getRndInteger(1, 7);
+            document.getElementById("dice1").innerHTML = dice1;
+            document.getElementById("dice2").innerHTML = dice2;
+            document.getElementById("Total").innerHTML = dice1 + dice2;
+        }
+        function AddCostOrMortgageOfProperty(value){
+          document.getElementById("amount").value = value;
+        }
+
+        function InitializeProperties(){
+            for (let index = 0; index < Properties.length; index++) {
+                document.getElementById("Properties").innerHTML +=
+                    '<button type="button" onclick="AddCostOrMortgageOfProperty('+Properties[index].Cost+')" Style="background-color:'+Properties[index].Color+';">'+ Properties[index].Name  + '</button>';
+                  
+                document.getElementById("Mortgages").innerHTML +=
+                    '<button type="button" onclick="AddCostOrMortgageOfProperty('+Properties[index].Mortgage+')" Style="background-color:'+Properties[index].Color+';">'+ Properties[index].Name  + '</button>';
+            }
+        }
+
+        window.addEventListener('load', function () {
+            InitializeStartRow(1, Player1Balance);
+            InitializeStartRow(2, Player2Balance);
+            InitializeProperties();
+        })
+        
+     </script>
+
+</head>
+<body>
+  <div class="container">
+    <div class="center">
+      <button type="button" onclick="RollDice()" Style="padding: 10px; width:200px; background-color: lightgreen;">Roll Dice</button>
+    </div>
+  </div>
+
+    <table>
+        <tr>
+          <th>Dice 1</th>
+          <th>Dice 2</th>
+        </tr>
+        <tr>
+          <td>
+              <p style ="font-size:100%"id="dice1"></p>
+            </td>
+          <td>
+              <p style ="font-size:100%"id="dice2"></p>
+            </td>
+        </tr>
+      </table>
+      <p style ="text-align:center" id="Total"></p>
+      <p style ="text-align:center" id="BoardBalance"></p>
+      <h1 style ="text-align:center";  ><strong>Ledger</strong></h1>
+      
+      <table>
+        <tr>
+          <th>Properties</th>
+        </tr>
+        <tr>
+          <td id="Properties" >
+              
+            </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>Mortgages</th>
+        </tr>
+        <tr>
+          <td id="Mortgages" >
+              
+            </td>
+        </tr>
+      </table>
+      <label for="amount">Amount:</label>
+      <input type="text" id="amount" name="amount"></td>
+      <table>
+        <tr>
+          <th id="Player1Balance">Player 1</th>
+          <th id="Player2Balance">Player 2</th>
+        </tr>
+        <tr>
+          <td>
+            <table>
+                <tr>
+                  <td>
+                    
+                    <td><button type="button" onclick="PayFine(1)">Pay Fine</button></td>
+                    <td><button type="button" onclick="PayTax(1, Player1Balance)">Pay Tax</button></td>
+                    <td><button type="button" onclick="CollectTax(1, Player1Balance)">Collect Tax</button></td>
+                  <td><button type="button" onclick="CreditOrDebit(1, true)">Credit</button></td>
+                  <td><button type="button" onclick="CreditOrDebit(1, false)">Debit</button></td>
+                </tr>
+            </table>
+            </td>
+          <td>
+            <table>
+                <tr>
+                  <td>
+                    <td><button type="button" onclick="PayFine(2)">Pay Fine</button></td>
+                    <td><button type="button" onclick="PayTax(2, Player2Balance)">Pay Tax</button></td>
+                    <td><button type="button" onclick="CollectTax(2, Player2Balance)">Collect Tax</button></td>
+                  <td><button type="button" onclick="CreditOrDebit(2, true)">Credit</button></td>
+                  <td><button type="button" onclick="CreditOrDebit(2, false)">Debit</button></td>
+                </tr>
+            </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table id ="player1Ledger">
+                    <tr>
+                      <th>Credit</th>
+                      <th>Debit</th>
+                      <th>Balance</th>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table id ="player2Ledger">
+                    <tr>
+                      <th>Credit</th>
+                      <th>Debit</th>
+                      <th>Balance</th>
+                    </tr>
+                    
+                </table>
+            </td></tr></table>  
+            
+        </body>
+        </html>
