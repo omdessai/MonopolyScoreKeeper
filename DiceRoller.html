@@ -50,7 +50,7 @@
 
     <script>
         var Properties = [
-            {Name: "Jacobs Field", Cost: 600000,  Color: "Purple", Rent: 20000, Rent1: 100000, Rent2: 300000, Rent3: 900000, Rent4: 1600000, Rent5: 2500000, HouseCost: 500000},
+            {Name: "Jacobs Field", Cost: 600000,  Color: "Purple", Rents:[20000, 40000, 100000, 300000, 900000, 1600000, 2500000], HouseCost:500000},
             {Name: "Texas Stadium", Cost: 600000, Color: "Purple", Rent: 40000, Rent1: 200000, Rent2: 600000, Rent3: 1800000, Rent4: 3200000, Rent5: 4500000, HouseCost: 500000},
             {Name: "Grand Ole Opry", Cost: 1000000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000, HouseCost: 500000},
             {Name: "Gateway Arch", Cost: 1000000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000, HouseCost: 500000},
@@ -61,8 +61,8 @@
             {Name: "South Beach", Cost: 1800000, Color: "Orange", Rent: 140000, Rent1: 700000, Rent2: 2000000, Rent3: 5500000, Rent4: 7500000, Rent5: 9500000, HouseCost: 1000000},
             {Name: "Johnson Space Center", Cost: 1800000, Color: "Orange", Rent: 140000, Rent1: 700000, Rent2: 2000000, Rent3: 5500000, Rent4: 7500000, Rent5: 9500000, HouseCost: 1000000},
             {Name: "Pioneer Square", Cost: 2000000, Color: "Orange", Rent: 160000, Rent1: 800000, Rent2: 2200000, Rent3: 6000000, Rent4: 8000000, Rent5: 1000000, HouseCost: 1000000},
-            {Name: "Camelback Mtn.", Cost: 2200000, Color: "Red", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000, HouseCost: 1500000},
-            {Name: "Wakiki Beach", Cost: 2200000, Color: "Red", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
+            {Name: "Camelback Mtn.", Cost: 2200000, Color: "Red", Rent: 180000, Rent1: 900000, Rent2: 2500000, Rent3: 7000000, Rent4: 8750000, Rent5: 10500000, HouseCost: 1500000},
+            {Name: "Wakiki Beach", Cost: 2200000, Color: "Red", Rent: 180000, Rent1: 900000, Rent2: 2500000, Rent3: 7000000, Rent4: 8750000, Rent5: 10500000, HouseCost: 1500000},
             {Name: "Disney World", Cost: 2400000, Color: "Red", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "French Quarters", Cost: 2600000, Color: "Yellow", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Hollywood", Cost: 2600000, Color: "Yellow", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
@@ -172,21 +172,14 @@
           document.getElementById("amount").value = value;
         }
         function AddRents(propertyIndex){
-          if(document.getElementById("default").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent;
-          if(document.getElementById("allProps").checked)
-            document.getElementById("amount").value = 2*(Properties[propertyIndex ].Rent);
-          if(document.getElementById("1house").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent1;
-          if(document.getElementById("2houses").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent2;
-          if(document.getElementById("3houses").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent3;
-          if(document.getElementById("4houses").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent4;
-          if(document.getElementById("hotel").checked)
-            document.getElementById("amount").value = Properties[propertyIndex ].Rent5;
-            
+          var rentOpts = document.getElementsByName("RentOptions");
+          var rentIndex = 0;
+          for (rentIndex = 0; rentIndex<rentOpts.length; rentIndex++){
+            if (rentOpts[rentIndex].checked){
+              break;
+            }
+          }
+          document.getElementById("amount").value = Properties[propertyIndex].Rents[rentIndex];
         }
         function InitializeProperties(){
             for (let index = 0; index < Properties.length; index++) {
