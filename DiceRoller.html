@@ -50,8 +50,8 @@
 
     <script>
         var Properties = [
-            {Name: "Texas Stadium", Cost: 600000, Mortgage: 300000, Color: "Purple", Rent: 20000, Rent1: 100000, Rent2: 300000, Rent3: 900000, Rent4: 1600000, Rent5: 2500000},
-            {Name: "Jacobs Field", Cost: 600000, Mortgage: 300000, Color: "Purple", Rent: 40000, Rent1: 200000, Rent2: 600000, Rent3: 1800000, Rent4: 3200000, Rent5: 4500000},
+            {Name: "Texas Stadium", Cost: 600000, Mortgage: 300000, Color: "Purple", Rent: 40000, Rent1: 200000, Rent2: 600000, Rent3: 1800000, Rent4: 3200000, Rent5: 4500000},
+            {Name: "Jacobs Field", Cost: 600000, Mortgage: 300000, Color: "Purple", Rent: 20000, Rent1: 100000, Rent2: 300000, Rent3: 900000, Rent4: 1600000, Rent5: 2500000},
             {Name: "Grand Ole Opry", Cost: 1000000, Mortgage: 500000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Gateway Arch", Cost: 1000000, Mortgage: 500000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Mall of America", Cost: 1200000, Mortgage: 600000, Color: "LightBlue", Rent: 80000, Rent1: 400000, Rent2: 1000000, Rent3: 3000000, Rent4: 4500000, Rent5: 6000000},
@@ -171,7 +171,23 @@
         function AddCostOrMortgageOfProperty(value){
           document.getElementById("amount").value = value;
         }
-
+        function AddRents(propertyIndex){
+          if(document.getElementById("default").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent;
+          if(document.getElementById("allProps").checked)
+            document.getElementById("amount").value = 2*(Properties[propertyIndex ].Rent);
+          if(document.getElementById("1house").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent1;
+          if(document.getElementById("2houses").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent2;
+          if(document.getElementById("3houses").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent3;
+          if(document.getElementById("4houses").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent4;
+          if(document.getElementById("hotel").checked)
+            document.getElementById("amount").value = Properties[propertyIndex ].Rent5;
+            
+        }
         function InitializeProperties(){
             for (let index = 0; index < Properties.length; index++) {
                 document.getElementById("Properties").innerHTML +=
@@ -179,9 +195,10 @@
                   
                 document.getElementById("Mortgages").innerHTML +=
                     '<button type="button" onclick="AddCostOrMortgageOfProperty('+Properties[index].Mortgage+')" Style="background-color:'+Properties[index].Color+';">'+ Properties[index].Name  + '</button>';
+                    document.getElementById("Rents").innerHTML +=
+                    '<button type="button" onclick="AddRents('+index+')" Style="background-color:'+Properties[index].Color+';">'+ Properties[index].Name  + '</button>';
             }
-        }
-
+          }
         window.addEventListener('load', function () {
             InitializeStartRow(1, Player1Balance);
             InitializeStartRow(2, Player2Balance);
@@ -233,6 +250,34 @@
         <tr>
           <td id="Mortgages" >
               
+            </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>Rents</th>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" id="default" name= "RentOptions" value="DEFAULT" checked>
+            <label for="default">Default</label>
+            <input type="radio" id="allProps" name ="RentOptions" value="ALL">
+            <label for="allProps">All Properties</label>
+            <input type="radio" id="1house" name ="RentOptions" value="1HOUSE">
+            <label for="1house">1 House</label>
+            <input type="radio" id="2houses" name ="RentOptions" value="2HOUSES">
+            <label for="2houses">2 Houses</label>
+            <input type="radio" id="3houses" name ="RentOptions" value="3HOUSES">
+            <label for="3houses">3 Houses</label>
+            <input type="radio" id="4houses" name ="RentOptions" value="4HOUSES">
+            <label for="4houses">4 Houses</label>
+            <input type="radio" id="hotel" name ="RentOptions" value="HOTEL">
+            <label for="hotel">Hotel</label>
+          </td>
+        </tr>
+        <tr>
+          <td id="Rents">
+            
             </td>
         </tr>
       </table>
