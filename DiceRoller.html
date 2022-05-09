@@ -51,11 +51,11 @@
     <script>
         var Properties = [
             {Name: "Jacobs Field", Cost: 600000,  Color: "Purple", Rents:[20000, 40000, 100000, 300000, 900000, 1600000, 2500000], HouseCost:500000},
-            {Name: "Texas Stadium", Cost: 600000, Color: "Purple", Rent: 40000, Rent1: 200000, Rent2: 600000, Rent3: 1800000, Rent4: 3200000, Rent5: 4500000, HouseCost: 500000},
-            {Name: "Grand Ole Opry", Cost: 1000000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000, HouseCost: 500000},
-            {Name: "Gateway Arch", Cost: 1000000, Color: "LightBlue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000, HouseCost: 500000},
-            {Name: "Mall of America", Cost: 1200000, Color: "LightBlue", Rent: 80000, Rent1: 400000, Rent2: 1000000, Rent3: 3000000, Rent4: 4500000, Rent5: 6000000, HouseCost: 500000},
-            {Name: "Centennial Olympic Park", Cost: 1400000, Color: "Pink", Rent: 100000, Rent1: 500000, Rent2: 1500000, Rent3: 4500000, Rent4: 6250000, Rent5: 7500000, HouseCost: 1000000},
+            {Name: "Texas Stadium", Cost: 600000, Color: "Purple", Rents:[40000, 80000, 200000, 600000, 1800000, 3200000, 4500000], HouseCost: 500000},
+            {Name: "Grand Ole Opry", Cost: 1000000, Color: "LightBlue", Rents:[60000, 120000, 300000, 900000, 2700000, 4000000, 5500000], HouseCost: 500000},
+            {Name: "Gateway Arch", Cost: 1000000, Color: "LightBlue", Rents:[60000, 120000, 300000, 900000, 2700000, 4000000, 5500000], HouseCost: 500000},
+            {Name: "Mall of America", Cost: 1200000, Color: "LightBlue", Rents:[80000, 160000, 400000, 1000000, 3000000, 4500000, 6000000], HouseCost: 1000000},
+            {Name: "Centennial Olympic Park", Cost: 1400000, Color: "Pink", Rents:[80000, 160000, 400000, 1000000, 3000000, 4500000, 6000000], HouseCost: 1000000},
             {Name: "Red Rocks Amphitheatre", Cost: 1400000, Color: "Pink", Rent: 100000, Rent1: 500000, Rent2: 1500000, Rent3: 4500000, Rent4: 6250000, Rent5: 7500000, HouseCost: 1000000},
             {Name: "Liberty Bell", Cost: 1600000, Color: "Pink", Rent: 120000, Rent1: 600000, Rent2: 1800000, Rent3: 5000000, Rent4: 7000000, Rent5: 9000000, HouseCost: 1000000},
             {Name: "South Beach", Cost: 1800000, Color: "Orange", Rent: 140000, Rent1: 700000, Rent2: 2000000, Rent3: 5500000, Rent4: 7500000, Rent5: 9500000, HouseCost: 1000000},
@@ -72,14 +72,19 @@
             {Name: "White House", Cost: 3200000, Color: "Green", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Fenway Park", Cost: 3500000, Color: "Blue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Time Square", Cost: 4000000, Color: "Blue", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
+        ];
+        
+        var Airports = [
             {Name: "ORD", Cost: 2000000, Color: "Airport", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "LAX", Cost: 2000000, Color: "Airport", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "JFK", Cost: 2000000, Color: "Airport", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "ATL", Cost: 2000000, Color: "Airport", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
+        ] 
+
+        var Providers = [
             {Name: "Cellphone Provider", Cost: 1500000, Color: "ServiceProvider", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
             {Name: "Internet Provider", Cost: 1500000, Color: "ServiceProvider", Rent: 60000, Rent1: 300000, Rent2: 900000, Rent3: 2700000, Rent4: 4000000, Rent5: 5500000},
-        ];
-        
+        ]
         Player1Balance = 5000000;
         Player2Balance = 5000000;
         BoardBalance = 0;
@@ -88,7 +93,6 @@
             document.getElementById("player"+playerNum+"Ledger").innerHTML =
             document.getElementById("player"+playerNum+"Ledger").innerHTML + 
             "<tr><td></td><td></td><td>"+balance+"</td></tr>";
-            
         }
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min) ) + min;
