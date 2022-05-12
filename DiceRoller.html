@@ -91,9 +91,6 @@
             document.getElementById("player"+playerNum+"Ledger").innerHTML + 
             "<tr><td></td><td></td><td>"+balance+"</td></tr>";
         }
-        function getRndInteger(min, max) {
-            return Math.floor(Math.random() * (max - min) ) + min;
-        }
 
         function PayFine(playerNum){
             var fine =  GetAmount(playerNum);
@@ -163,11 +160,16 @@
         }
         
         function RollDice() {
-            var dice1 = getRndInteger(1, 7);
-            var dice2 = getRndInteger(1, 7);
-            document.getElementById("dice1").innerHTML = dice1;
-            document.getElementById("dice2").innerHTML = dice2;
-            document.getElementById("Total").innerHTML = dice1 + dice2;
+          var apiUrl = 'http://192.168.1.2:7000/rolldice';
+          fetch(apiUrl).then(response => {
+            return response.json();
+          }).then(data => {
+            // Work with JSON data here
+            console.log(data);
+          }).catch(err => {
+            // Do something for an error here
+          });
+
         }
         function AddCostOrMortgageOfProperty(value){
           document.getElementById("amount").value = value;
@@ -197,9 +199,41 @@
                     '<button type="button" onclick="AddRents('+index+')" Style="background-color:'+Properties[index].Color+';">'+ Properties[index].Name  + '</button>';
             }
           }
+
+        function PrintLedger(){
+          var apiUrl = 'http://192.168.1.2:7000/data';
+          fetch(apiUrl).then(response => {
+            return response.json();
+          }).then(data => {
+            // Work with JSON data here
+            console.log(data);
+            document.getElementById("dice1").innerHTML = data.Dice[0];
+            document.getElementById("dice2").innerHTML = data.Dice[1];
+            document.getElementById("Total").innerHTML = data.Dice[0] + data.Dice[1];
+
+            document.getElementById("Player1Balance").innerHTML = "Player 1:  " + data.P1[data.P1.length -1].Balance;
+            document.getElementById("Player2Balance").innerHTML = "Player 2:  " + data.P1[data.P2.length -1].Balance;
+
+            for(ledger in data.P1){
+              document.getElementById("player2Ledger").innerHTML =
+              "<tr><td>"+ledger.Credit+"</td><td"+ledger.Debit+"</td><td>"+ledger.Balance+"</td></tr>";
+            }
+            for(ledger in data.P2){
+              document.getElementById("player1Ledger").innerHTML =
+              "<tr><td>"+ledger.Credit+"</td><td"+ledger.Debit+"</td><td>"+ledger.Balance+"</td></tr>";
+            }
+            
+
+
+          }).catch(err => {
+            // Do something for an error here
+          });
+        }
+
         window.addEventListener('load', function () {
-            InitializeStartRow(1, Player1Balance);
-            InitializeStartRow(2, Player2Balance);
+            PrintLedger();
+            //InitializeStartRow(1, Player1Balance);
+            //InitializeStartRow(2, Player2Balance);
             InitializeProperties();
         })
         
