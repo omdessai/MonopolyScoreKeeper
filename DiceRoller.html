@@ -49,6 +49,7 @@
     </style>
 
     <script>
+        var serverIP = "http://192.168.1.7:7000"
         var Properties = [
             {Name: "Jacobs Field", Type: "Land", Cost: 600000,  Color: "Purple", Rents:[20000, 40000, 100000, 300000, 900000, 1600000, 2500000], HouseCost:500000},
             {Name: "Texas Stadium", Type: "Land", Cost: 600000, Color: "Purple", Rents:[40000, 80000, 200000, 600000, 1800000, 3200000, 4500000], HouseCost: 500000},
@@ -160,7 +161,7 @@
         }
         
         function RollDice() {
-          var apiUrl = 'http://192.168.1.2:7000/rolldice';
+          var apiUrl = serverIP + '/rolldice';
           fetch(apiUrl).then(response => {
             return response.json();
           }).then(data => {
@@ -201,7 +202,7 @@
           }
 
         function PrintLedger(){
-          var apiUrl = 'http://192.168.1.2:7000/data';
+          var apiUrl = serverIP+ '/data';
           fetch(apiUrl).then(response => {
             return response.json();
           }).then(data => {
@@ -212,26 +213,27 @@
             document.getElementById("Total").innerHTML = data.Dice[0] + data.Dice[1];
 
             document.getElementById("Player1Balance").innerHTML = "Player 1:  " + data.P1[data.P1.length -1].Balance;
-            document.getElementById("Player2Balance").innerHTML = "Player 2:  " + data.P1[data.P2.length -1].Balance;
+            document.getElementById("Player2Balance").innerHTML = "Player 2:  " + data.P2[data.P2.length -1].Balance;
 
-            for(ledger in data.P1){
-              document.getElementById("player2Ledger").innerHTML =
-              "<tr><td>"+ledger.Credit+"</td><td"+ledger.Debit+"</td><td>"+ledger.Balance+"</td></tr>";
+            document.getElementById("player1Ledger").innerHTML = "";
+            document.getElementById("player2Ledger").innerHTML = "";
+            for (i = data.P1.length - 1; i > data.P1.length - 6 && i >= 0; i--){
+              document.getElementById("player1Ledger").innerHTML +=
+              "<tr><td>"+data.P1[i].Credit+"</td><td>"+data.P1[i].Debit+"</td><td>"+data.P1[i].Balance+"</td></tr>";
             }
-            for(ledger in data.P2){
-              document.getElementById("player1Ledger").innerHTML =
-              "<tr><td>"+ledger.Credit+"</td><td"+ledger.Debit+"</td><td>"+ledger.Balance+"</td></tr>";
+
+            for (i = data.P2.length - 1; i > data.P2.length - 6 && i >= 0; i--){
+              document.getElementById("player2Ledger").innerHTML +=
+              "<tr><td>"+data.P2[i].Credit+"</td><td>"+data.P2[i].Debit+"</td><td>"+data.P2[i].Balance+"</td></tr>";
             }
-            
-
-
           }).catch(err => {
             // Do something for an error here
           });
         }
 
         window.addEventListener('load', function () {
-            PrintLedger();
+          setInterval(PrintLedger, 1000);
+            
             //InitializeStartRow(1, Player1Balance);
             //InitializeStartRow(2, Player2Balance);
             InitializeProperties();
@@ -337,7 +339,7 @@
           <td>
             <table>
                 <tr>
-                  <td>
+                  <td >
                     <td><button type="button" onclick="PayFine(2)">Pay Fine</button></td>
                     <td><button type="button" onclick="PayTax(2, Player2Balance)">Pay Tax</button></td>
                     <td><button type="button" onclick="CollectTax(2, Player2Balance)">Collect Tax</button></td>
@@ -349,7 +351,7 @@
         </tr>
         <tr>
             <td>
-                <table id ="player1Ledger">
+                <table>
                     <tr>
                       <th>Credit</th>
                       <th>Debit</th>
@@ -358,7 +360,7 @@
                 </table>
             </td>
             <td>
-                <table id ="player2Ledger">
+                <table>
                     <tr>
                       <th>Credit</th>
                       <th>Debit</th>
@@ -366,7 +368,22 @@
                     </tr>
                     
                 </table>
-            </td></tr></table>  
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <table id ="player1Ledger">
+                    
+                </table>
+            </td>
+            <td>
+                <table id ="player2Ledger">
+                    
+                    
+                </table>
+            </td>
+          </tr>
+        </table>  
             
         </body>
-        </html>
+</html>
