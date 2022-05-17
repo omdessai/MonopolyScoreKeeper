@@ -59,17 +59,24 @@ var server = http.createServer(function (req, res) {
             console.log("For Player 2");
             player = MonopolyGame.P2;
         }
-        if(queryObject.action === "boardcredit"){
+        if(queryObject.action === "paytax"){
+            console.log("Paying Tax");
+            tax = Math.floor(player[player.length - 1].Balance/10);
+            CreditOrDebit(player, -1 * tax);
+            MonopolyGame.BoardBalance += tax;
+            
+        }
+        else if(queryObject.action === "boardcredit"){
             console.log("Crediting from board");
             CreditOrDebit(player, MonopolyGame.BoardBalance);
             MonopolyGame.BoardBalance = 0;
         }
         else if(queryObject.action === "boarddebit"){
             console.log("Crediting to board");
-            if(!isNaN(parseInt(queryObject.amount))){
-                CreditOrDebit(player, -1 * parseInt(queryObject.amount));
+            if(!isNaN(parseInt(queryObject.debit))){
+                CreditOrDebit(player, -1 * parseInt(queryObject.debit));
             }
-            MonopolyGame.BoardBalance += parseInt(queryObject.amount);
+            MonopolyGame.BoardBalance += parseInt(queryObject.debit);
             
         }
         else if(!isNaN(parseInt(queryObject.credit))){
