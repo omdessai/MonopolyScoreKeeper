@@ -83,9 +83,6 @@
             {Name: "Cellphone Provider", Type: "Provider",  Cost: 1500000, Color: "ServiceProvider", RentWith1: 0, RentWith2: 0},
             {Name: "Internet Provider", Type: "Provider", Type: "Land", Cost: 1500000, Color: "ServiceProvider", RentWith1: 0, RentWith2: 0},
           ];
-        Player1Balance = 5000000;
-        Player2Balance = 5000000;
-        BoardBalance = 0;
 
         function InitializeStartRow(playerNum, balance){
             document.getElementById("player"+playerNum+"Ledger").innerHTML =
@@ -94,22 +91,15 @@
         }
 
         function PayFine(playerNum){
-            var fine =  GetAmount(playerNum);
-            BoardBalance +=  fine;
-            BoardBalance = Math.floor(BoardBalance);
-            CreditOrDebitWithAmount(playerNum, false, fine);
+            CreditOrDebitWithAmount(playerNum, false, true, false, -1 * GetAmount());
         }
 
-        function PayTax(playerNum, PlayerXBalance){
-            BoardBalance +=  PlayerXBalance/10;
-            BoardBalance = Math.floor(BoardBalance);
-            CreditOrDebitWithAmount(playerNum, false, PlayerXBalance/10);
+        function PayTax(playerNum){
+            CreditOrDebitWithAmount(playerNum, true);
         }
 
         function CollectTax(playerNum){
-            var currentTax =BoardBalance;
-            BoardBalance =  0;
-            CreditOrDebitWithAmount(playerNum, true, currentTax);
+            CreditOrDebitWithAmount(playerNum, false, false, true);
         }
 
         function GetAmount(){
@@ -118,46 +108,37 @@
 
         function CreditOrDebit(playerNum, isCredit) {
             var amount = GetAmount();
-            CreditOrDebitWithAmount(playerNum, isCredit, amount);
+            CreditOrDebitWithAmount(playerNum, false, false, false, isCredit? amount: -1* amount);
         }
 
-        function CreditOrDebitWithAmount(playerNum, isCredit, amount) {
-            document.getElementById("BoardBalance").innerHTML = "Board Balance: " + BoardBalance;
+        function CreditOrDebitWithAmount(playerNum, isPayTax, isPayFine, isCollectBoardBalance, amount) {
 
-            if(playerNum == 1){
-                if(isCredit){
-                    Player1Balance += amount;
-                    Player1Balance = Math.floor(Player1Balance);
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
-                    "<tr><td>"+amount+ "</td><td></td><td>"+Player1Balance+"</td></tr>";
-                } else {
-                    Player1Balance -= amount;
-                    Player1Balance = Math.floor(Player1Balance);
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
-                    "<tr><td></td><td>"+amount+ "</td><td>"+Player1Balance+"</td></tr>";
-                }
-                
-            } else {
-                if(isCredit){
-                    Player2Balance += amount;
-                    Player2Balance = Math.floor(Player2Balance);
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
-                    "<tr><td>"+amount+ "</td><td></td><td>"+Player2Balance+"</td></tr>";
-                } else {
-                    Player2Balance -= amount;
-                    Player2Balance = Math.floor(Player2Balance);
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML =
-                    document.getElementById("player"+playerNum+"Ledger").innerHTML + 
-                    "<tr><td></td><td>"+amount+ "</td><td>"+Player2Balance+"</td></tr>";
-                }
-            }
+          var apiUrl = serverIP + '/creditordebit?player=';
+          apiUrl += playerNum == 1? "1":"2";
+          if(isPayTax == true){
+            apiUrl += "&action=paytax"
+          }
+          else if(isCollectBoardBalance == true){
+            apiUrl += "&action=boardcredit"
+          }
+          else if(isPayFine == true){
+            apiUrl += "&action=boarddebit"
+          } 
+          if (amount < 0) {
+              apiUrl += "&debit=" + -1 * amount;
+          } else {
+              apiUrl += "&credit=" + amount;
+          }
 
-            document.getElementById("Player1Balance").innerHTML = "Player 1:  " + Player1Balance;
-            document.getElementById("Player2Balance").innerHTML = "Player 2:  " + Player2Balance;
-            
+          console.log(apiUrl);
+          fetch(apiUrl).then(response => {
+            return response.json();
+          }).then(data => {
+            // Work with JSON data here
+            console.log(data);
+          }).catch(err => {
+            // Do something for an error here
+          });
         }
         
         function RollDice() {
@@ -207,10 +188,12 @@
             return response.json();
           }).then(data => {
             // Work with JSON data here
-            console.log(data);
+            //console.log(data);
             document.getElementById("dice1").innerHTML = data.Dice[0];
             document.getElementById("dice2").innerHTML = data.Dice[1];
             document.getElementById("Total").innerHTML = data.Dice[0] + data.Dice[1];
+
+            document.getElementById("BoardBalance").innerHTML = "Board Balance: " + data.BoardBalance;
 
             document.getElementById("Player1Balance").innerHTML = "Player 1:  " + data.P1[data.P1.length -1].Balance;
             document.getElementById("Player2Balance").innerHTML = "Player 2:  " + data.P2[data.P2.length -1].Balance;
